@@ -5,6 +5,7 @@ import keystatic from '@keystatic/astro';
 import cloudflare from '@astrojs/cloudflare';
 
 export default defineConfig({
+	output: 'server',
   site: 'https://sugiyanto.com',
   image: {
     service: passthroughImageService()
