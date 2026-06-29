@@ -6,9 +6,9 @@ export default config({
    kind: 'github',
    repo: {
      owner: sugiyant,
-     name: sugi-blog,
-   }
-}
+     name: sugi-blog
+   }   
+},
   
   collections: {
     posts: collection({
