@@ -29,3 +29,10 @@ dist/
 .env
 _backup_blog/
 *.bak
+node_modules/
+dist/
+.wrangler/
+.astro/
+.env
+_backup_blog/
+*.bak
