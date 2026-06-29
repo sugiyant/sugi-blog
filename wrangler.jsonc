@@ -1,0 +1,7 @@
+{
+  "name": "sugi-blog",
+  "compatibility_date": "2026-06-25",
+  "kv_namespaces": [
+    { "binding": "SESSION", "id": "a66d09ff793f4c31b8d1abdbdc776930" }
+  ]
+}
