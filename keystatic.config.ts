@@ -1,7 +1,11 @@
 import { config, collection, fields } from '@keystatic/core';
 
 export default config({
-  storage: { kind: 'local' },
+  storage: { kind: 'github' },
+  repo: {
+    owner: 'sugiyant',
+    name: 'sugi-blog',
+  },
   collections: {
     posts: collection({
       label: 'Postingan',
