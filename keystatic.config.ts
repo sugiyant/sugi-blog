@@ -1,14 +1,13 @@
 import { config, collection, fields } from '@keystatic/core';
 
 export default config({
-  storage: isProd
-    ? {
-        kind: 'github',
-        repo: 'sugiyant/sugi-blog', // Ganti dengan repo Anda
-      }
-    : {
-        kind: 'local',
-      },
+  storage: { kind: 'github',
+  			pathPrefix: 'prod',
+  			repo: {
+    owner: 'sugiyant',
+    name: 'sugi-blog',
+  },
+   },
   
   collections: {
     posts: collection({
