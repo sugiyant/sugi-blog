@@ -1,14 +1,13 @@
 import { config, collection, fields } from '@keystatic/core';
 
 export default config({
-	storage: {
-   
-   kind: 'github',
-   repo: {
-     owner: sugiyant,
-     name: sugi-blog
-   }   
-},
+  storage: { kind: 'github',
+  			pathPrefix: 'prod',
+  			repo: {
+    owner: 'sugiyant',
+    name: 'sugi-blog',
+  },
+   },
   
   collections: {
     posts: collection({
