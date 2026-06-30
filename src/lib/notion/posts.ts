@@ -1,23 +1,21 @@
 import { notion, databaseId } from './client';
 
 export async function getAllPosts() {
-  const response = await notion.databases.query({
-    database_id: databaseId,
-    filter: {
-      property: 'Status',
-      select: {
-        equals: 'Published',
+  const response = await notion.request({
+    path: `/databases/${databaseId}/query`,
+    method: 'POST',
+    body: {
+      filter: {
+        property: 'Status',
+        select: { equals: 'Published' }
       },
-    },
-    sorts: [
-      {
-        property: 'Date',
-        direction: 'descending',
-      },
-    ],
+      sorts: [
+        { property: 'Date', direction: 'descending' }
+      ]
+    }
   });
 
-  return response.results.map((page) => {
+  return response.results.map((page: any) => {
     const props = page.properties;
     return {
       id: page.id,
@@ -30,32 +28,33 @@ export async function getAllPosts() {
 }
 
 export async function getPostBySlug(slug: string) {
-  const response = await notion.databases.query({
-    database_id: databaseId,
-    filter: {
-      property: 'Slug',
-      rich_text: {
-        equals: slug,
-      },
-    },
+  const response = await notion.request({
+    path: `/databases/${databaseId}/query`,
+    method: 'POST',
+    body: {
+      filter: {
+        property: 'Slug',
+        rich_text: { equals: slug }
+      }
+    }
   });
 
   if (response.results.length === 0) return null;
 
   const page = response.results[0];
-  const props = page.properties;
-
-  const blocksResponse = await notion.blocks.children.list({
-    block_id: page.id,
+  const blocksResponse = await notion.request({
+    path: `/blocks/${page.id}/children`,
+    method: 'GET'
   });
 
+  const props = page.properties;
   return {
     id: page.id,
     slug,
     title: props.Title?.title?.[0]?.plain_text || 'Untitled',
     date: props.Date?.date?.start || '',
     excerpt: props.Excerpt?.rich_text?.[0]?.plain_text || '',
-    blocks: blocksResponse.results,
+    blocks: blocksResponse.results || [],
   };
 }
 
