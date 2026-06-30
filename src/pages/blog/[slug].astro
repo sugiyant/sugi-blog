@@ -1,0 +1,39 @@
+---
+import { getPostBySlug } from '../../lib/notion';
+import { renderBlocks } from '../../lib/notion-renderer';
+
+const { slug } = Astro.params;
+const post = await getPostBySlug(slug);
+---
+
+<!DOCTYPE html>
+<html>
+<head>
+  <title>{post ? post.title : 'Not Found'}</title>
+  <style>
+    body { font-family: system-ui, sans-serif; max-width: 800px; margin: 2rem auto; padding: 0 1rem; }
+    .post-header { border-bottom: 1px solid #ddd; margin-bottom: 1.5rem; padding-bottom: 1rem; }
+    .post-title { margin: 0 0 0.25rem; }
+    .post-date { color: #666; font-size: 0.9rem; }
+    .post-content img { max-width: 100%; height: auto; }
+    .post-content pre { background: #f5f5f5; padding: 0.5rem; overflow-x: auto; }
+    .post-content blockquote { border-left: 4px solid #ccc; padding-left: 1rem; margin-left: 0; }
+    .post-content ul, .post-content ol { padding-left: 1.5rem; }
+  </style>
+</head>
+<body>
+  {post ? (
+    <>
+      <div class="post-header">
+        <h1 class="post-title">{post.title}</h1>
+        <div class="post-date">{post.date}</div>
+      </div>
+      <div class="post-content">
+        {renderBlocks(post.blocks)}
+      </div>
+    </>
+  ) : (
+    <h1>Artikel tidak ditemukan</h1>
+  )}
+</body>
+</html>

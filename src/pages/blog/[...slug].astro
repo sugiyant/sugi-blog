@@ -1,20 +1,51 @@
 ---
-import { type CollectionEntry, getCollection, render } from 'astro:content';
-import BlogPost from '../../layouts/BlogPost.astro';
+import { getPostBySlug, renderBlocks } from '../../lib/notion/posts';
+import BaseHead from '../../components/BaseHead.astro';
+import Header from '../../components/Header.astro';
+import Footer from '../../components/Footer.astro';
+import FormattedDate from '../../components/FormattedDate.astro';
+import { SITE_TITLE } from '../../consts';
 
 export async function getStaticPaths() {
-	const posts = await getCollection('blog');
-	return posts.map((post) => ({
-		params: { slug: post.id },
-		props: post,
-	}));
+  // Karena output: 'server', kita tidak perlu generate path statis.
+  // Tapi Astro tetap meminta getStaticPaths jika menggunakan [...slug].
+  // Kita bisa return array kosong, nanti di runtime akan menangani slug apapun.
+  return [];
 }
-type Props = CollectionEntry<'blog'>;
 
-const post = Astro.props;
-const { Content } = await render(post);
+const { slug } = Astro.params;
+const post = slug ? await getPostBySlug(slug) : null;
+const title = post ? `${post.title} | ${SITE_TITLE}` : 'Not Found';
 ---
 
-<BlogPost {...post.data}>
-	<Content />
-</BlogPost>
+<!doctype html>
+<html lang="en">
+  <head>
+    <BaseHead title={title} />
+    <style>
+      body { max-width: 800px; margin: 0 auto; padding: 1rem; font-family: sans-serif; }
+      .post-header { border-bottom: 1px solid #ddd; margin-bottom: 1.5rem; }
+      .post-title { margin: 0; }
+      .post-date { color: #666; }
+      .post-content img { max-width: 100%; height: auto; }
+      .post-content pre { background: #f5f5f5; padding: 0.5rem; overflow-x: auto; }
+    </style>
+  </head>
+  <body>
+    <Header />
+    <main>
+      {post ? (
+        <>
+          <div class="post-header">
+            <h1 class="post-title">{post.title}</h1>
+            <p class="post-date"><FormattedDate date={post.date} /></p>
+          </div>
+          <div class="post-content" set:html={renderBlocks(post.blocks)} />
+        </>
+      ) : (
+        <h1>Artikel tidak ditemukan</h1>
+      )}
+    </main>
+    <Footer />
+  </body>
+</html>
