@@ -1,6 +1,5 @@
 import { notion, databaseId } from './client';
 
-// Ambil semua artikel yang sudah dipublish
 export async function getAllPosts() {
   const response = await notion.databases.query({
     database_id: databaseId,
@@ -30,7 +29,6 @@ export async function getAllPosts() {
   });
 }
 
-// Ambil satu artikel berdasarkan slug, termasuk blok kontennya
 export async function getPostBySlug(slug: string) {
   const response = await notion.databases.query({
     database_id: databaseId,
@@ -47,7 +45,6 @@ export async function getPostBySlug(slug: string) {
   const page = response.results[0];
   const props = page.properties;
 
-  // Ambil blok konten
   const blocksResponse = await notion.blocks.children.list({
     block_id: page.id,
   });
@@ -62,7 +59,6 @@ export async function getPostBySlug(slug: string) {
   };
 }
 
-// Render blok Notion menjadi HTML string
 export function renderBlocks(blocks: any[]) {
   let html = '';
   for (const block of blocks) {
